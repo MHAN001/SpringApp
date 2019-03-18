@@ -2,6 +2,7 @@ package guru.springframework.sfgpetclinic.services.map;
 
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.model.Pet;
+import guru.springframework.sfgpetclinic.services.CrudService;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 @Service
 @Profile({"default", "map"})
-public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService {
+public class OwnerMapService extends AbstractMapService<Owner, Long> implements CrudService<Owner, Long> {
 
     private final PetTypeService petTypeService;
     private final PetService petService;
@@ -38,31 +39,9 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner save(Owner object) {
-
-        if(object != null){
-            if (object.getPets() != null) {
-                object.getPets().forEach(pet -> {
-                    if (pet.getPetType() != null){
-                        if(pet.getPetType().getId() == null){
-                            pet.setPetType(petTypeService.save(pet.getPetType()));
-                        }
-                    } else {
-                        throw new RuntimeException("Pet Type is required");
-                    }
-
-                    if(pet.getId() == null){
-                        Pet savedPet = petService.save(pet);
-                        pet.setId(savedPet.getId());
-                    }
-                });
-            }
-
-            return super.save(object);
-
-        } else {
-            return null;
-        }
+        return null;
     }
+
 
     @Override
     public void delete(Owner object) {
@@ -74,19 +53,17 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
         super.deleteById(id);
     }
 
-    @Override
-    public Owner findByLastName(String lastName) {
-        return this.findAll()
-                .stream()
-                .filter(owner -> owner.getLastName().equalsIgnoreCase(lastName))
-                .findFirst()
-                .orElse(null);
-    }
 
-    @Override
-    public List<Owner> findAllByLastNameLike(String lastName) {
-
-        //todo - impl
-        return null;
-    }
+//    @Override
+//    public Owner findByLastName(String lastName) {
+//        //TODO find Owner from map using lastName
+//        return null;
+//    }
+//
+//    @Override
+//    public List<Owner> findAllByLastNameLike(String lastName) {
+//
+//        //todo - impl
+//        return null;
+//    }
 }

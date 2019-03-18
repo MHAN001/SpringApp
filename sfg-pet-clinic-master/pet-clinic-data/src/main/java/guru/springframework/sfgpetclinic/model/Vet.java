@@ -9,13 +9,7 @@ import java.util.Set;
 /**
  * Created by jt on 7/13/18.
  */
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "vets")
+
 public class Vet extends Person {
 
     @ManyToMany(fetch = FetchType.EAGER)
