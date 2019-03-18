@@ -1,32 +1,33 @@
 package guru.springframework.sfgpetclinic.services.map;
 
 import guru.springframework.sfgpetclinic.model.BaseEntity;
+import guru.springframework.sfgpetclinic.services.CrudService;
 
 import java.util.*;
 
 /**
  * Created by jt on 7/21/18.
  */
-public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> {
+public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
 
-    protected Map<Long, T> map = new HashMap<>();
+    protected Map<ID, T> map = new HashMap<>();
 
-    Set<T> findAll(){
+    public Set<T> findAll(){
         return new HashSet<>(map.values());
     }
 
-    T findById(ID id) {
+    public T findById(ID id) {
         return map.get(id);
     }
 
-    T save(T object){
+    public T save(ID id, T object){
 
         if(object != null) {
-            if(object.getId() == null){
-                object.setId(getNextId());
-            }
+//            if(id == null){
+//                id = getNextId();
+//            }
 
-            map.put(object.getId(), object);
+            map.put(id, object);
         } else {
             throw new RuntimeException("Object cannot be null");
         }
@@ -34,24 +35,24 @@ public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> 
         return object;
     }
 
-    void deleteById(ID id){
+    public void deleteById(ID id){
         map.remove(id);
     }
 
-    void delete(T object){
+    public void delete(T object){
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
     }
 
-    private Long getNextId(){
-
-        Long nextId = null;
-
-        try {
-            nextId = Collections.max(map.keySet()) + 1;
-        } catch (NoSuchElementException e) {
-            nextId = 1L;
-        }
-
-        return nextId;
-    }
+//    private ID getNextId(){
+//
+//        Long nextId = null;
+//
+//        try {
+//            nextId = Collections.max(map.keySet()) + 1;
+//        } catch (NoSuchElementException e) {
+//            nextId = 1L;
+//        }
+//
+//        return nextId;
+//    }
 }
